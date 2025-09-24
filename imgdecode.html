@@ -1,0 +1,75 @@
+<!-- imgdecode.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Image Decoding</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+    <header>
+        <nav class="nav">
+            <div class="nav-left">
+                <a class="brand" href="./index.html">Home</a>
+                <a href="./imgencode.html">Image Encoding</a>
+                <a class="active" href="./imgdecode.html">Image Decoding</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container">
+        <h1>DECODING</h1>
+
+        <section class="card grid">
+            <form id="decodeForm" class="grid">
+                <div class="row">
+                    <label>Choose file to decode:</label>
+                    <input type="file" name="encoded" accept="image/*,.png,.bmp,.jpg,.jpeg,.tif,.tiff,.gif" required>
+                </div>
+                <div class="row">
+                    <label>Enter secret key (e.g., pass or pass@x,y):</label>
+                    <input type="text" name="key" placeholder="pass or pass@120,45" required>
+                </div>
+                <div class="actions">
+                    <button class="btn-primary" type="submit">Confirm & Decode</button>
+                    <span id="decStatus" class="status"></span>
+                </div>
+            </form>
+        </section>
+
+        <section id="decResult" class="card hidden">
+            <h2>DECODING RESULT:</h2>
+
+            <pre id="decMeta" class="meta"></pre>
+
+            <!-- previews only -->
+            <div id="decPreviewRow" class="previewRow">
+                <div class="thumb">
+                    <div class="muted">Encoded</div>
+                    <img id="decEncodedImg" alt="Encoded">
+                </div>
+
+                <div class="thumb" id="decodedThumb">
+                    <div class="muted" id="decodedLabel">Decoded</div>
+                    <img id="decDecodedImg" alt="Decoded">
+                    <pre id="decDecodedText" class="hidden" style="white-space:pre-wrap;"></pre>
+                </div>
+            </div>
+
+            <!-- buttons live in their own row (not in the grid) -->
+            <div class="actions">
+                <a id="downloadDecoded" class="btn-primary hidden">Download Decoded File</a>
+                <button id="decClear" type="button" class="btn-ghost">Clear</button>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="./app.js?v=dec1"></script>
+</body>
+
+</html>

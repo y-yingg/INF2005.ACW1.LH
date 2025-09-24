@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Image Encoding</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+
+<body>
+  <header>
+    <nav class="nav">
+      <div class="nav-left">
+        <a class="brand" href="./index.html">Home</a>
+        <a class="active" href="./imgencode.html">Image Encoding</a>
+        <a href="./imgdecode.html">Image Decoding</a>
+      </div>
+    </nav>
+  </header>
+
+
+  <main>
+    <h1>ENCODING</h1>
+
+    <section class="card grid">
+      <form id="encodeForm" class="grid">
+
+        <div class="row">
+          <label>Choose cover image:</label>
+          <input type="file" name="cover" accept="image/*,.png,.bmp,.jpg,.jpeg,.tif,.tiff,.gif" required>
+        </div>
+
+        <div class="row">
+          <label>Payload source: File or Text?</label>
+          <div>
+            <label style="margin-right:12px;">
+              <input type="radio" name="payload_src" value="file" checked>
+              File
+            </label>
+            <label>
+              <input type="radio" name="payload_src" value="text">
+              Text
+            </label>
+          </div>
+        </div>
+
+        <div class="row" id="rowPayloadFile">
+          <label>Choose payload (any file):</label>
+          <input id="payloadInput" type="file" name="payload">
+        </div>
+
+        <div class="row hidden" id="rowPayloadText">
+          <label>Enter the text payload:</label>
+          <textarea id="payloadText" name="payload_text" rows="4" placeholder="Type your secret here..."></textarea>
+        </div>
+
+
+        <!-- <div class="row">
+        <label>Enter secret key (e.g., pass or pass@x,y):</label>
+        <input type="text" name="key" placeholder="pass or pass@120,45" required>
+      </div> -->
+
+        <!-- Secret key (update the label text you already have) -->
+        <div class="row">
+          <label>Enter secret key:</label>
+          <input type="text" name="key" placeholder="pass" required>
+        </div>
+
+        <!-- Show only when a cover image has been selected -->
+        <div class="form-row" id="rowUseAnchor">
+          <label class="q">Specify location of payload on the cover object?</label>
+          <div class="inline-options">
+            <label class="radio-inline"><input type="radio" name="use_anchor" value="no" checked> No</label>
+            <label class="radio-inline"><input type="radio" name="use_anchor" value="yes"> Yes</label>
+          </div>
+        </div>
+
+        <div class="form-row" id="rowAnchorMethod">
+          <label class="q">Selection location by?</label>
+          <div class="inline-options">
+            <label class="radio-inline"><input type="radio" name="anchor_method" value="type" checked> Typing</label>
+            <label class="radio-inline"><input type="radio" name="anchor_method" value="click"> Mouse-click</label>
+          </div>
+        </div>
+
+        <!-- Typing -->
+        <div class="form-row" id="rowAnchorTyping">
+          <div class="xy-grid">
+            <label for="anchorX" class="q">x number (e.g., 120)</label>
+            <input id="anchorX" name="anchor_x" type="number" min="0" step="1" inputmode="numeric">
+
+            <label for="anchorY" class="q">y number (e.g., 45)</label>
+            <input id="anchorY" name="anchor_y" type="number" min="0" step="1" inputmode="numeric">
+          </div>
+        </div>
+
+        <!-- Mouse click -->
+        <div class="row hidden" id="rowAnchorClick">
+          <button type="button" id="openAnchorPicker" class="btn-ghost">Pop-out Image to Select Location</button>
+          <span id="anchorPicked" class="muted"></span>
+        </div>
+
+        <!-- Simple native dialog for clicking the cover -->
+        <dialog id="anchorDialog">
+          <div class="modal">
+            <img id="anchorImage" alt="Cover preview to pick (x,y)"
+              style="max-width:90vw;max-height:70vh;display:block;margin:auto;">
+            <p class="muted" id="anchorHelp" style="text-align:center;margin:0.5rem 0;">
+              Click on the image to select (x,y). Press Esc to close.
+            </p>
+            <div style="text-align:center;">
+              <button type="button" id="closeAnchorDialog" class="btn-ghost">Close</button>
+            </div>
+          </div>
+        </dialog>
+
+
+
+        <div class="row">
+          <label>How many LSBs to use (1..8)?</label>
+          <select name="lsb">
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+          </select>
+        </div>
+        <p id="capacityHint" class="muted"></p>
+        <div class="actions">
+          <button class="btn-primary" type="submit">Confirm & Encode</button>
+          <span id="status" class="status"></span>
+        </div>
+
+      </form>
+    </section>
+
+    <section id="resultSection" class="card hidden" style="margin-top:16px;">
+      <h2>ENCODING RESULT:</h2>
+      <div id="resultMessage" class="result-msg muted"></div>
+
+      <div id="previewRow" class="result-grid hidden">
+        <div class="result-card">
+          <h4>Cover Image</h4>
+          <img id="coverImg" alt="Cover preview">
+        </div>
+
+        <div class="result-card">
+          <h4>Encoded Image</h4>
+          <img id="encodedImg" alt="Encoded image">
+        </div>
+
+        <div class="result-card">
+          <h4>Difference</h4>
+          <img id="diffImg" alt="Difference preview">
+        </div>
+      </div>
+
+      <div class="actions" style="margin-top:16px;">
+        <a id="downloadEncoded" class="btn-primary">Download Encoded File</a>
+        <a class="btn-ghost" href="./imgencode.html">Clear</a>
+      </div>
+    </section>
+
+
+
+
+
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,312 @@
+:root {
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: #0b0b0b;
+  color: #f5f5f5;
+}
+
+/* Navbar */
+.nav {
+  display: flex;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #222;
+  background: #121212;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nav-left a {
+  color: #ddd;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+.nav-left a:hover {
+  background: #1b1b1b;
+}
+
+.nav-left .brand {
+  color: #fff;
+  font-weight: 700;
+}
+
+.nav-left a.active {
+  background: #2d6cdf;
+  color: #fff;
+}
+
+header {
+  margin-bottom: 12px;
+}
+
+h1 {
+  margin: 0 16px 12px 16px;
+  font-size: 1.5rem;
+}
+
+.container {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0 16px 24px;
+}
+
+.card {
+  border: 1px solid #333;
+  border-radius: 14px;
+  padding: 18px;
+  background: #121212;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .02), 0 6px 24px rgba(0, 0, 0, .35);
+}
+
+.grid {
+  display: grid;
+  gap: 14px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 12px;
+  align-items: center;
+}
+
+input[type="file"]::file-selector-button,
+button,
+select,
+a.btn-primary,
+a.btn-ghost {
+  background: #222;
+  color: #f5f5f5;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #444;
+  background: #0e0e0e;
+  color: #fff;
+}
+
+.actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-primary {
+  background: #2d6cdf;
+  border-color: #2d6cdf;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid #444;
+}
+
+/* Shared button base so sizes match */
+/* .btn-primary,
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;              
+  padding: 0 16px;           
+  font: inherit;              
+  font-weight: 600;
+  border-radius: 12px;
+  text-decoration: none;
+  line-height: 1;
+  cursor: pointer;
+} */
+
+/* Primary keeps your filled look */
+/* .btn-primary {
+  background: var(--accent, #6aa6ff);
+  color: #fff;
+  border: 1px solid var(--accent, #6aa6ff);
+} */
+
+/* Exit styled to match dimensions & typography, with outline look */
+/* .btn-ghost {
+  background: transparent;
+  color: var(--accent, #6aa6ff);
+  border: 1px solid var(--accent, #6aa6ff);
+} */
+
+
+.muted {
+  color: #bdbdbd;
+  font-size: .95rem;
+}
+
+.previewRow {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 12px;
+}
+
+.thumb {
+  border: 1px solid #333;
+  background: #0e0e0e;
+  border-radius: 10px;
+  padding: 8px;
+  text-align: center;
+}
+
+.thumb img {
+  width: 100%;
+  height: auto;
+  border-radius: 6px;
+  display: block;
+}
+
+/* .hidden { display: none; } */
+.hidden {
+  display: none !important;
+}
+
+.status {
+  color: #bdbdbd;
+}
+
+.result-msg {
+  margin-bottom: 10px;
+}
+
+.result-msg.error {
+  color: #ffb4b4;
+}
+
+.previewRow {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* --- RESULT GRIDS: 3 equal columns, scale images to card width --- */
+.result-grid,
+#previewRow,
+#decPreviewRow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  align-items: start;
+}
+
+/* Each card */
+.result-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 12px;
+}
+
+/* Make the images scale down to the card, never overflow */
+#coverImg,
+#encodedImg,
+#diffImg,
+#decEncodedImg,
+#decDecodedImg {
+  width: 100%;
+  /* take full card width */
+  height: auto;
+  /* keep aspect ratio */
+  max-height: 420px;
+  /* keep them from getting too tall */
+  object-fit: contain;
+  display: block;
+  border-radius: 6px;
+}
+
+/* If you show tiny thumbnails elsewhere (optional) */
+.img-thumb {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Stack on small screens */
+@media (max-width: 1024px) {
+
+  .result-grid,
+  #previewRow,
+  #decPreviewRow {
+    grid-template-columns: 1fr;
+  }
+}
+
+.inline-options {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 4px;
+}
+
+.inline-options .radio-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+}
+
+.form-row>label.q {
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* lays out X and Y as two rows: label left, input right */
+.xy-grid {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  grid-row-gap: 10px;
+  grid-column-gap: 12px;
+  align-items: center;
+  max-width: 520px;
+}
+
+
+.xy-grid>label.q {
+  margin: 0;
+  white-space: nowrap;
+}
+
+
+.xy-grid input[type="number"] {
+  max-width: 200px;
+}
