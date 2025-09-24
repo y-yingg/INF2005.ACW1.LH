@@ -87,6 +87,7 @@ def api_encode():
             payload_name = secure_filename(payload_file.filename or "payload.bin")
 
         # 5) Optional anchor -> compose into key as "@x,y" for compatibility
+        start_xy = None
         use_anchor = (request.form.get("use_anchor") or "").lower() == "yes"
         key_full = key
         if use_anchor:
@@ -95,17 +96,21 @@ def api_encode():
             if not ax or not ay:
                 return jsonify({"error": "Provide both X and Y for the anchor, or turn it off."}), 400
             try:
-                ax_i = int(ax)
-                ay_i = int(ay)
+                ax_i = int(ax); ay_i = int(ay)
                 if ax_i < 0 or ay_i < 0:
                     raise ValueError
             except ValueError:
                 return jsonify({"error": "Anchor X/Y must be non-negative integers."}), 400
-            key_full = f"{key}@{ax_i},{ay_i}"
+            # bounds check against cover size
+            w, h = cover_img.size
+            if not (0 <= ax_i < w and 0 <= ay_i < h):
+                return jsonify({"error": f"Anchor out of bounds for this image ({w}x{h})."}), 400
+            start_xy = (ax_i, ay_i)
+            key_full = key
 
         # 6) ENCODE
         encoded_img, orig_arr, enc_arr = encode_image_with_key(
-            cover_img, payload_bytes, payload_name, key_full, lsb
+            cover_img, payload_bytes, payload_name, key_full, lsb, start_xy=start_xy
         )
         diff_img = make_difference_image(orig_arr, enc_arr, lsb)
 
