@@ -36,36 +36,10 @@ def planes_perm_from_key(key_seed: str) -> list[int]:
 
 def parse_key_with_anchor(key_str: str):
     """
-    Accepts:
-      'pass' → (pass, None)
-      'pass@N' → (pass, (N,N))
-      'pass@X,Y' or 'XxY' or 'X;Y' or 'X Y' or 'X:Y'
+    Anchorless: treat the entire input as the key; no coordinates supported.
+    Always returns (key, None).
     """
-    if '@' not in key_str:
-        return key_str, None
-    base, coord = key_str.split('@', 1)
-    coord = coord.strip()
-    if not coord:
-        return base, None
-
-    seps = [',', 'x', 'X', ';', ' ', ':']
-    parts = None
-    for sep in seps:
-        if sep in coord:
-            parts = [p for p in coord.replace(' ', '').split(sep) if p]
-            break
-    try:
-        if parts is None:
-            n = int(coord);  assert n >= 0
-            return base, (n, n)
-        if len(parts) == 1:
-            n = int(parts[0]);  assert n >= 0
-            return base, (n, n)
-        x = int(parts[0]); y = int(parts[1])
-        assert x >= 0 and y >= 0
-        return base, (x, y)
-    except Exception:
-        raise ValueError("Invalid key anchor. Use pass@N or pass@X,Y (e.g., secret@64 or secret@120,45).")
+    return key_str, None
 
 # ---------- small headers ----------
 BOOT_MAGIC = b"S0"
@@ -140,9 +114,11 @@ def parse_header(data: bytes) -> dict:
 
 # ---------- core ----------
 def encode_image_with_key(img: Image.Image, payload: bytes, payload_name: str,
-                          key_full: str, lsb_count: int):
+                          key_full: str, lsb_count: int, start_xy: Optional[Tuple[int,int]] = None):
     """Write BOOT in plane 0; MAIN+payload with plane-cycle over k LSBs."""
-    base_key, anchor_xy = parse_key_with_anchor(key_full)
+    # base_key, anchor_xy = parse_key_with_anchor(key_full)
+    base_key = key_full
+    anchor_xy = start_xy  # anchor is passed in explicitly
     arr = np.array(img.convert("RGB"), dtype=np.uint8)  # (H,W,3)
     H, W, _ = arr.shape
     flat = arr.reshape(-1)
@@ -160,14 +136,7 @@ def encode_image_with_key(img: Image.Image, payload: bytes, payload_name: str,
         #  raise ValueError(f"Payload too large for select cover object.\n Payload needs {need} bits, capacity is only {cap} bits")
 
     perm = permutation_from_key(base_key + "|perm", flat.size)
-    if anchor_xy and 0 <= anchor_xy[0] < W and 0 <= anchor_xy[1] < H:
-        anchor_lin = (anchor_xy[1] * W + anchor_xy[0]) * 3
-        try:
-            start = perm.index(anchor_lin)
-        except ValueError:
-            start = sha_int(base_key + "|start") % flat.size
-    else:
-        start = sha_int(base_key + "|start") % flat.size
+    start = sha_int(base_key + "|start") % flat.size
 
     out = flat.copy()
 
@@ -199,14 +168,7 @@ def decode_image_with_key(img: Image.Image, key_full: str):
     flat = arr.reshape(-1)
 
     perm = permutation_from_key(base_key + "|perm", flat.size)
-    if anchor_xy and 0 <= anchor_xy[0] < W and 0 <= anchor_xy[1] < H:
-        anchor_lin = (anchor_xy[1] * W + anchor_xy[0]) * 3
-        try:
-            start = perm.index(anchor_lin)
-        except ValueError:
-            start = sha_int(base_key + "|start") % flat.size
-    else:
-        start = sha_int(base_key + "|start") % flat.size
+    start = sha_int(base_key + "|start") % flat.size
 
     # 1) BOOT ← plane 0
     idx = start
